@@ -145,14 +145,15 @@ public class bingoUI {
         }
 
         private void callNextNumber() {
-            String call = gameLogic.getNextCall();
+            String call = gameLogic.getNextCall(); // Retrieve the next random call from GameLogic
             if (call != null) {
-                callLabel.setText("Call: " + call);
+                callLabel.setText("Call: " + call); // Update the label with the called number
+                statusLabel.setText("Match the number: " + call); // Prompt the user for action
             } else {
                 statusLabel.setText("Game Over! " + (gameLogic.hasWon() ? "You won!" : "You lost!"));
                 for (JButton[] row : bingoButtons) {
                     for (JButton button : row) {
-                        button.setEnabled(false);
+                        button.setEnabled(false); // Disable all buttons since the game has ended
                     }
                 }
             }
