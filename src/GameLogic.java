@@ -15,8 +15,8 @@ public class GameLogic {
     }
 
     public void startGame() {
-        currentCallIndex = 0;  // Reset the current call index when the game starts
-        Collections.shuffle(calls);  // Shuffle the list of calls to ensure randomness
+        currentCallIndex = 0;
+        Collections.shuffle(calls);
     }
 
     public void resetGame() {
@@ -26,8 +26,8 @@ public class GameLogic {
             String prefix = i <= 15 ? "B" : i <= 30 ? "I" : i <= 45 ? "N" : i <= 60 ? "G" : "O";
             calls.add(prefix + i);
         }
-        Collections.shuffle(calls);  // Shuffle at reset so calls are random
-        currentCallIndex = 0;  // Reset the current call index
+        Collections.shuffle(calls);
+        currentCallIndex = 0;
     }
 
     // Return a random Bingo number for a given column (row used to determine the column range)
@@ -38,21 +38,21 @@ public class GameLogic {
     // Get the next Bingo call in the shuffled list
     public String getNextCall() {
         if (currentCallIndex < totalCalls) {
-            return calls.get(currentCallIndex++);  // Get the next call and increment index
+            return calls.get(currentCallIndex++);
         }
-        return null;  // No more calls if we've reached the total number of calls
+        return null;
     }
 
     // Get the current call (the one that was last used)
     public String getCurrentCall() {
         if (currentCallIndex > 0 && currentCallIndex <= totalCalls) {
-            return calls.get(currentCallIndex - 1);  // Return the current call
+            return calls.get(currentCallIndex - 1);
         }
-        return null;  // No current call yet
+        return null;
     }
 
     // Check if the game is won (you can define your own win logic)
     public boolean hasWon() {
-        return currentCallIndex >= totalCalls;  // If we've called enough numbers, it's a win (or game over)
+        return currentCallIndex >= totalCalls;
     }
 }

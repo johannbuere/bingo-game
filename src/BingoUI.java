@@ -3,10 +3,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class bingoUI {
+public class BingoUI {
 
-    public bingoUI() {
-        new MainMenu(); // Start with the main menu
+    public BingoUI() {
+        new MainMenu();
     }
 
     // MainMenu Class
@@ -79,7 +79,7 @@ public class bingoUI {
             frame.setLayout(new BorderLayout());
 
             // Create Bingo card panel
-            cardPanel = new JPanel(new GridLayout(GRID_SIZE + 1, GRID_SIZE)); // Extra row for headers
+            cardPanel = new JPanel(new GridLayout(GRID_SIZE + 1, GRID_SIZE));
             bingoButtons = new JButton[GRID_SIZE][GRID_SIZE];
 
             // Add headers for "BINGO"
@@ -92,10 +92,10 @@ public class bingoUI {
             // Add number buttons
             for (int i = 0; i < GRID_SIZE; i++) {
                 for (int j = 0; j < GRID_SIZE; j++) {
-                    bingoButtons[i][j] = new JButton(gameLogic.getRandomBingoNumber(j).substring(1)); // Display only the number
+                    bingoButtons[i][j] = new JButton(gameLogic.getRandomBingoNumber(j).substring(1));
                     bingoButtons[i][j].setFont(new Font("Arial", Font.BOLD, 20));
                     bingoButtons[i][j].setEnabled(false); // Disabled until the game starts
-                    bingoButtons[i][j].addActionListener(new BingoButtonListener(i, j)); // Pass position
+                    bingoButtons[i][j].addActionListener(new BingoButtonListener(i, j));
                     cardPanel.add(bingoButtons[i][j]);
                 }
             }
@@ -145,15 +145,15 @@ public class bingoUI {
         }
 
         private void callNextNumber() {
-            String call = gameLogic.getNextCall(); // Retrieve the next random call from GameLogic
+            String call = gameLogic.getNextCall();
             if (call != null) {
-                callLabel.setText("Call: " + call); // Update the label with the called number
-                statusLabel.setText("Match the number: " + call); // Prompt the user for action
+                callLabel.setText("Call: " + call);
+                statusLabel.setText("Match the number: " + call);
             } else {
                 statusLabel.setText("Game Over! " + (gameLogic.hasWon() ? "You won!" : "You lost!"));
                 for (JButton[] row : bingoButtons) {
                     for (JButton button : row) {
-                        button.setEnabled(false); // Disable all buttons since the game has ended
+                        button.setEnabled(false);
                     }
                 }
             }
@@ -184,7 +184,7 @@ public class bingoUI {
             public void actionPerformed(ActionEvent e) {
                 JButton clicked = (JButton) e.getSource();
                 String call = gameLogic.getCurrentCall();
-                String expectedCall = headers[col] + clicked.getText(); // Reconstruct the letter-number combo
+                String expectedCall = headers[col] + clicked.getText();
 
                 if (expectedCall.equals(call)) {
                     clicked.setEnabled(false);

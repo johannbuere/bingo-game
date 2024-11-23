@@ -1,6 +1,6 @@
 
-public class bingoMain {
+public class BingoMain {
     public static void main(String [] args) {
-        new bingoUI();
+        new BingoUI();
     }
 }
