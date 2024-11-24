@@ -1,199 +1,139 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class BingoUI {
+    private int maxCalls;
+    private int numCards;
+    private BingoCaller caller;
+    private ArrayList<BingoCard> cards;
+    private JFrame frame;
+    private JLabel callLabel;
+    private JPanel cardPanel;
 
-    public BingoUI() {
-        new MainMenu();
+    public BingoUI(int maxCalls, int numCards) {
+        this.maxCalls = maxCalls;
+        this.numCards = numCards;
+        this.caller = new BingoCaller(maxCalls);
+        this.cards = new ArrayList<>();
+
+        for (int i = 0; i < numCards; i++) {
+            cards.add(new BingoCard());
+        }
     }
 
-    // MainMenu Class
-    class MainMenu {
-        JFrame frame;
-        JButton singleLineButton, twoLineButton, blackoutButton, quitButton;
+    public void launch() {
+        frame = new JFrame("Bingo Game");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(new BorderLayout(10, 10)); // Add spacing around components
 
-        public MainMenu() {
-            frame = new JFrame("Bingo Main Menu");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setLayout(new GridLayout(4, 1, 10, 10));
+        callLabel = new JLabel("Next Call: ", SwingConstants.CENTER);
+        callLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        callLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        frame.add(callLabel, BorderLayout.NORTH);
 
-            JLabel titleLabel = new JLabel("Welcome to Bingo!", SwingConstants.CENTER);
-            titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
-            frame.add(titleLabel);
+        cardPanel = new JPanel(new GridLayout(0, 3, 10, 10)); // Allow for multiple rows/columns
+        JScrollPane scrollPane = new JScrollPane(cardPanel);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding
+        updateCardPanel();
+        frame.add(scrollPane, BorderLayout.CENTER);
 
-            singleLineButton = new JButton("Single Line");
-            twoLineButton = new JButton("Two Lines");
-            blackoutButton = new JButton("Blackout");
-            quitButton = new JButton("Quit");
+        JPanel controls = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10)); // Center buttons with spacing
+        JButton nextCall = new JButton("Next Call");
+        JButton resetGame = new JButton("Reset Game");
+        JButton exitGame = new JButton("Exit Game");
 
-            singleLineButton.addActionListener(e -> handleGameType("Single Line", 20, 25));
-            twoLineButton.addActionListener(e -> handleGameType("Two Lines", 30, 40));
-            blackoutButton.addActionListener(e -> handleGameType("Blackout", 60, 70));
-            quitButton.addActionListener(e -> System.exit(0));
+        nextCall.addActionListener(e -> handleNextCall());
+        resetGame.addActionListener(e -> resetGame());
+        exitGame.addActionListener(e -> System.exit(0));
 
-            frame.add(singleLineButton);
-            frame.add(twoLineButton);
-            frame.add(blackoutButton);
-            frame.add(quitButton);
+        controls.add(nextCall);
+        controls.add(resetGame);
+        controls.add(exitGame);
+        frame.add(controls, BorderLayout.SOUTH);
 
-            frame.setSize(400, 300);
-            frame.setVisible(true);
-        }
+        frame.setSize(900, 700);
+        frame.setLocationRelativeTo(null); // Center the frame on screen
+        frame.setVisible(true);
+    }
 
-        private void handleGameType(String gameType, int minCalls, int maxCalls) {
-            String input = JOptionPane.showInputDialog(frame,
-                    "Enter the number of calls for " + gameType + " (between " + minCalls + " and " + maxCalls + "):");
-            try {
-                int calls = Integer.parseInt(input);
-                if (calls >= minCalls && calls <= maxCalls) {
-                    frame.dispose();
-                    new BingoCardUI(gameType, calls);
-                } else {
-                    JOptionPane.showMessageDialog(frame, "Invalid number. Please try again.");
+    private void handleNextCall() {
+        if (caller.hasCallsLeft()) {
+            String nextCall = caller.getNextCall();
+            callLabel.setText("Next Call: " + nextCall);
+
+            boolean someoneWon = false;
+
+            for (BingoCard card : cards) {
+                card.markNumber(nextCall);
+                if (card.hasWon()) {
+                    someoneWon = true;
                 }
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(frame, "Please enter a valid number.");
             }
+            updateCardPanel();
+
+            if (someoneWon) {
+                JOptionPane.showMessageDialog(frame, "We have a winner!");
+                resetGame();
+            }
+        } else {
+            JOptionPane.showMessageDialog(frame, "No more calls left. Game over!");
         }
     }
 
-    // BingoCardUI Class
-    class BingoCardUI {
-        JFrame frame;
-        JPanel cardPanel;
-        JLabel statusLabel, callLabel;
-        JButton[][] bingoButtons;
-        JButton startButton, resetButton, backButton;
-        final int GRID_SIZE = 5;
+    private void updateCardPanel() {
+        cardPanel.removeAll();
 
-        String[] headers = {"B", "I", "N", "G", "O"};
-        GameLogic gameLogic;
+        for (int i = 0; i < cards.size(); i++) {
+            JPanel singleCardPanel = new JPanel(new GridLayout(6, 5));
+            singleCardPanel.setBorder(BorderFactory.createLineBorder(getColorForCard(i), 3));
 
-        public BingoCardUI(String gameType, int totalCalls) {
-            gameLogic = new GameLogic(gameType, totalCalls);
-
-            frame = new JFrame("Bingo Card");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setLayout(new BorderLayout());
-
-            // Create Bingo card panel
-            cardPanel = new JPanel(new GridLayout(GRID_SIZE + 1, GRID_SIZE));
-            bingoButtons = new JButton[GRID_SIZE][GRID_SIZE];
-
-            // Add headers for "BINGO"
+            // Add the BINGO header
+            String[] headers = {"B", "I", "N", "G", "O"};
             for (String header : headers) {
                 JLabel headerLabel = new JLabel(header, SwingConstants.CENTER);
-                headerLabel.setFont(new Font("Arial", Font.BOLD, 20));
-                cardPanel.add(headerLabel);
+                headerLabel.setFont(new Font("Arial", Font.BOLD, 18));
+                headerLabel.setOpaque(true);
+                headerLabel.setBackground(Color.LIGHT_GRAY);
+                headerLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+                singleCardPanel.add(headerLabel);
             }
 
-            // Add number buttons
-            for (int i = 0; i < GRID_SIZE; i++) {
-                for (int j = 0; j < GRID_SIZE; j++) {
-                    bingoButtons[i][j] = new JButton(gameLogic.getRandomBingoNumber(j).substring(1));
-                    bingoButtons[i][j].setFont(new Font("Arial", Font.BOLD, 20));
-                    bingoButtons[i][j].setEnabled(false); // Disabled until the game starts
-                    bingoButtons[i][j].addActionListener(new BingoButtonListener(i, j));
-                    cardPanel.add(bingoButtons[i][j]);
+            // Add card's numbers and marked status
+            String[][] numbers = cards.get(i).getCard();
+            boolean[][] marked = cards.get(i).getMarked();
+
+            for (int row = 0; row < 5; row++) {
+                for (int col = 0; col < 5; col++) {
+                    JLabel cell = new JLabel(numbers[row][col], SwingConstants.CENTER);
+                    cell.setOpaque(true);
+                    cell.setFont(new Font("Arial", Font.BOLD, 18));
+                    cell.setBackground(marked[row][col] ? Color.GREEN : Color.WHITE);
+                    cell.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+                    singleCardPanel.add(cell);
                 }
             }
 
-            // Create status and call labels
-            statusLabel = new JLabel("Press Start to Begin!", SwingConstants.CENTER);
-            statusLabel.setFont(new Font("Arial", Font.BOLD, 16));
-
-            callLabel = new JLabel("Call: ", SwingConstants.CENTER);
-            callLabel.setFont(new Font("Arial", Font.BOLD, 20));
-
-            // Create buttons
-            startButton = new JButton("Start Game");
-            resetButton = new JButton("Reset Card");
-            backButton = new JButton("Back to Main Menu");
-
-            startButton.addActionListener(e -> startGame());
-            resetButton.addActionListener(e -> resetCard());
-            backButton.addActionListener(e -> {
-                frame.dispose();
-                new MainMenu();
-            });
-
-            JPanel buttonPanel = new JPanel(new GridLayout(1, 3, 10, 10));
-            buttonPanel.add(startButton);
-            buttonPanel.add(resetButton);
-            buttonPanel.add(backButton);
-
-            frame.add(statusLabel, BorderLayout.NORTH);
-            frame.add(cardPanel, BorderLayout.CENTER);
-            frame.add(callLabel, BorderLayout.SOUTH);
-            frame.add(buttonPanel, BorderLayout.SOUTH);
-
-            frame.setSize(500, 600);
-            frame.setVisible(true);
+            cardPanel.add(singleCardPanel);
         }
 
-        private void startGame() {
-            gameLogic.startGame();
-            for (JButton[] row : bingoButtons) {
-                for (JButton button : row) {
-                    button.setEnabled(true);
-                }
-            }
-            statusLabel.setText("Game Started! Click the called number.");
-            callNextNumber();
+        cardPanel.revalidate();
+        cardPanel.repaint();
+    }
+
+    private void resetGame() {
+        caller = new BingoCaller(maxCalls);
+        cards.clear();
+        for (int i = 0; i < numCards; i++) {
+            cards.add(new BingoCard());
         }
+        updateCardPanel();
+        callLabel.setText("Next Call: ");
+    }
 
-        private void callNextNumber() {
-            String call = gameLogic.getNextCall();
-            if (call != null) {
-                callLabel.setText("Call: " + call);
-                statusLabel.setText("Match the number: " + call);
-            } else {
-                statusLabel.setText("Game Over! " + (gameLogic.hasWon() ? "You won!" : "You lost!"));
-                for (JButton[] row : bingoButtons) {
-                    for (JButton button : row) {
-                        button.setEnabled(false);
-                    }
-                }
-            }
-        }
-
-        private void resetCard() {
-            gameLogic.resetGame();
-            for (int i = 0; i < GRID_SIZE; i++) {
-                for (int j = 0; j < GRID_SIZE; j++) {
-                    bingoButtons[i][j].setText(gameLogic.getRandomBingoNumber(j).substring(1)); // Reset to numbers only
-                    bingoButtons[i][j].setEnabled(false);
-                }
-            }
-            statusLabel.setText("Card Reset! Press Start to Begin.");
-            callLabel.setText("Call: ");
-        }
-
-        private class BingoButtonListener implements ActionListener {
-            private final int row;
-            private final int col;
-
-            public BingoButtonListener(int row, int col) {
-                this.row = row;
-                this.col = col;
-            }
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JButton clicked = (JButton) e.getSource();
-                String call = gameLogic.getCurrentCall();
-                String expectedCall = headers[col] + clicked.getText();
-
-                if (expectedCall.equals(call)) {
-                    clicked.setEnabled(false);
-                    statusLabel.setText("Correct! Waiting for the next call.");
-                    callNextNumber();
-                } else {
-                    statusLabel.setText("Incorrect! The call was: " + call);
-                }
-            }
-        }
+    private Color getColorForCard(int index) {
+        Color[] colors = {Color.RED, Color.BLUE, Color.YELLOW, Color.ORANGE, Color.PINK};
+        return colors[index % colors.length];
     }
 }
