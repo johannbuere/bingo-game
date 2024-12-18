@@ -47,10 +47,10 @@ public class BingoCard {
         try {
             number = Integer.parseInt(call.substring(1));
         } catch (NumberFormatException e) {
-            return; // Ignore invalid calls
+            return;
         }
 
-        // Map letter to column index
+        // column index
         int colIndex = switch (letter) {
             case 'B' -> 0;
             case 'I' -> 1;
@@ -65,7 +65,7 @@ public class BingoCard {
         for (int row = 0; row < 5; row++) {
             if (card[row][colIndex].equals(String.valueOf(number))) {
                 marked[row][colIndex] = true; // Mark the number
-                break; // No need to continue searching this column
+                break;
             }
         }
     }

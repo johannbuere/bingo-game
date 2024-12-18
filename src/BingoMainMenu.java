@@ -20,7 +20,8 @@ public class BingoMainMenu {
         panel.add(exitGame);
         frame.add(panel);
 
-        frame.setSize(300, 150);
+        frame.setSize(600, 300);
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 
@@ -55,7 +56,8 @@ public class BingoMainMenu {
         panel.add(startGame);
 
         frame.add(panel);
-        frame.setSize(400, 200);
+        frame.setSize(800, 400);
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 }

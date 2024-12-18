@@ -1,13 +1,12 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
 public class BingoUI {
-    private int maxCalls;
-    private int numCards;
+    private final int maxCalls;
+    private final int numCards;
     private BingoCaller caller;
-    private ArrayList<BingoCard> cards;
+    private final ArrayList<BingoCard> cards;
     private JFrame frame;
     private JLabel callLabel;
     private JPanel cardPanel;
@@ -26,20 +25,29 @@ public class BingoUI {
     public void launch() {
         frame = new JFrame("Bingo Game");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLayout(new BorderLayout(10, 10)); // Add spacing around components
+        frame.setLayout(new BorderLayout(10, 10));
 
         callLabel = new JLabel("Next Call: ", SwingConstants.CENTER);
         callLabel.setFont(new Font("Arial", Font.BOLD, 24));
         callLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         frame.add(callLabel, BorderLayout.NORTH);
 
-        cardPanel = new JPanel(new GridLayout(0, 3, 10, 10)); // Allow for multiple rows/columns
+        cardPanel = new JPanel(new GridLayout(0, 3, 10, 10));
         JScrollPane scrollPane = new JScrollPane(cardPanel);
-        scrollPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add padding
+        scrollPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         updateCardPanel();
         frame.add(scrollPane, BorderLayout.CENTER);
 
-        JPanel controls = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10)); // Center buttons with spacing
+        JPanel controls = getJPanel();
+        frame.add(controls, BorderLayout.SOUTH);
+
+        frame.setSize(900, 700);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+    }
+
+    private JPanel getJPanel() {
+        JPanel controls = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
         JButton nextCall = new JButton("Next Call");
         JButton resetGame = new JButton("Reset Game");
         JButton exitGame = new JButton("Exit Game");
@@ -51,11 +59,7 @@ public class BingoUI {
         controls.add(nextCall);
         controls.add(resetGame);
         controls.add(exitGame);
-        frame.add(controls, BorderLayout.SOUTH);
-
-        frame.setSize(900, 700);
-        frame.setLocationRelativeTo(null); // Center the frame on screen
-        frame.setVisible(true);
+        return controls;
     }
 
     private void handleNextCall() {
