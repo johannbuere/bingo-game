@@ -1,6 +1,6 @@
 # bingo game
 
-a modern graphical bingo game with enhanced UI, real-time tracking, and customizable gameplay.
+A simple Java-based Bingo game, featuring random number generation and player interaction
 
 ## features
 
