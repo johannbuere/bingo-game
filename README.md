@@ -1,14 +1,17 @@
 # bingo game
 
-a graphical bingo game implementation with customizable cards and call limits.
+a modern graphical bingo game with enhanced UI, real-time tracking, and customizable gameplay.
 
 ## features
 
-- **multiple cards**: play with multiple bingo cards simultaneously
-- **custom settings**: configure number of calls and cards
-- **visual interface**: color-coded cards with marked numbers
-- **win detection**: automatic detection of rows, columns, and diagonals
-- **game controls**: reset, continue, or exit at any time
+- **modern dark theme**: sleek interface with color-coded cards
+- **real-time call tracking**: side panel displays all called numbers
+- **multiple winner detection**: identifies and announces all winning cards
+- **visual feedback**: marked numbers highlighted with distinct colors
+- **call counter**: tracks progress with current/maximum call display
+- **spinner controls**: easy number selection with validation
+- **game state management**: proper handling of win conditions and game over
+- **responsive design**: adapts to different numbers of cards
 
 ## getting started
 
@@ -24,29 +27,42 @@ javac src/*.java
 java -cp src BingoGame
 ```
 
-## how to play
+## gameplay
 
-1. launch the game and click "start game"
-2. set your preferred number of calls and cards
-3. click "next call" to draw numbers
-4. numbers are automatically marked on matching cards
-5. first card to complete a line (row, column, or diagonal) wins
+1. launch the game from the main menu
+2. configure settings using spinners:
+   - **calls**: 10-75 (default: 30)
+   - **cards**: 1-6 (default: 3)
+3. click "start game" to begin
+4. press "next call" to draw numbers
+5. watch as numbers are automatically marked
+6. winning cards display with green borders
+7. reset anytime or return to menu
 
 ## game rules
 
-- standard 5x5 bingo cards with free center space
-- numbers range from B1-B15, I16-I30, N31-N45, G46-G60, O61-O75
-- win conditions: any complete row, column, or diagonal
-- game resets automatically after a win
+- standard 5x5 cards with free center space
+- number ranges: B(1-15), I(16-30), N(31-45), G(46-60), O(61-75)
+- win conditions: complete row, column, or diagonal
+- multiple cards can win simultaneously
+- game continues until winner or calls exhausted
+
+## ui enhancements
+
+- **color palette**: dark theme with amber accents
+- **card identification**: numbered cards with unique colors
+- **marked cells**: golden yellow highlighting
+- **winner indication**: bright green borders
+- **hover effects**: button interactions with color transitions
+- **call history**: scrollable list with formatted display
 
 ## project structure
 
 ```
 src/
-├── BingoGame.java       # entry point
-├── BingoMainMenu.java   # menu and settings
-├── BingoUI.java         # game interface
-├── BingoCard.java       # card generation and logic
+├── BingoGame.java       # entry point and main menu
+├── BingoUI.java         # enhanced game interface
+├── BingoCard.java       # card generation and win logic
 └── BingoCaller.java     # number calling system
 ```
 
@@ -54,3 +70,4 @@ src/
 
 - java 8 or higher
 - swing support (included in standard jdk)
+
