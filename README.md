@@ -1,73 +1,90 @@
 # bingo game
 
-a modern graphical bingo game with enhanced UI, real-time tracking, and customizable gameplay.
+a java-based graphical bingo game with multiple cards and customizable settings.
 
-## features
+## requirements
 
-- **modern dark theme**: sleek interface with color-coded cards
-- **real-time call tracking**: side panel displays all called numbers
-- **multiple winner detection**: identifies and announces all winning cards
-- **visual feedback**: marked numbers highlighted with distinct colors
-- **call counter**: tracks progress with current/maximum call display
-- **spinner controls**: easy number selection with validation
-- **game state management**: proper handling of win conditions and game over
-- **responsive design**: adapts to different numbers of cards
+- java development kit (jdk) 8 or higher
+- no external libraries needed (uses built-in swing)
 
-## getting started
+## setup
 
-### compile
+1. **install java** (if not already installed)
+   - download from [oracle](https://www.oracle.com/java/technologies/downloads/) or [openjdk](https://openjdk.org/)
+   - verify installation: `java -version`
+
+2. **clone or download** this repository
+
+3. **navigate to project directory**
+   ```bash
+   cd bingo-game
+   ```
+
+## how to run
+
+### compile the game
 
 ```bash
 javac src/*.java
 ```
 
-### run
+this compiles all four java files:
+- `BingoGame.java` - main entry point and menu
+- `BingoUI.java` - game interface and controls
+- `BingoCard.java` - card generation and win detection
+- `BingoCaller.java` - random number calling system
+
+### launch the game
 
 ```bash
 java -cp src BingoGame
 ```
 
-## gameplay
+## how to play
 
-1. launch the game from the main menu
-2. configure settings using spinners:
-   - **calls**: 10-75 (default: 30)
-   - **cards**: 1-6 (default: 3)
-3. click "start game" to begin
-4. press "next call" to draw numbers
-5. watch as numbers are automatically marked
-6. winning cards display with green borders
-7. reset anytime or return to menu
+1. **main menu** opens automatically
+   - adjust number of calls (10-75)
+   - adjust number of cards (1-6)
+   - click "start game"
 
-## game rules
+2. **game screen** shows your cards
+   - click "next call" to draw a number
+   - matching numbers are marked automatically
+   - called numbers appear in the side panel
 
-- standard 5x5 cards with free center space
-- number ranges: B(1-15), I(16-30), N(31-45), G(46-60), O(61-75)
-- win conditions: complete row, column, or diagonal
-- multiple cards can win simultaneously
-- game continues until winner or calls exhausted
+3. **winning**
+   - complete any row, column, or diagonal to win
+   - game announces winners automatically
+   - click "reset" to play again
 
-## ui enhancements
+## game components
 
-- **color palette**: dark theme with amber accents
-- **card identification**: numbered cards with unique colors
-- **marked cells**: golden yellow highlighting
-- **winner indication**: bright green borders
-- **hover effects**: button interactions with color transitions
-- **call history**: scrollable list with formatted display
+### BingoGame.java
+main entry point that displays the menu where you configure game settings before starting.
 
-## project structure
+### BingoUI.java
+handles the game interface including card display, number calling, win detection, and all visual elements.
 
-```
-src/
-├── BingoGame.java       # entry point and main menu
-├── BingoUI.java         # enhanced game interface
-├── BingoCard.java       # card generation and win logic
-└── BingoCaller.java     # number calling system
-```
+### BingoCard.java
+generates random 5x5 bingo cards with proper number ranges (B: 1-15, I: 16-30, N: 31-45, G: 46-60, O: 61-75). includes logic for marking numbers and checking win conditions.
 
-## requirements
+### BingoCaller.java
+manages the random number calling system, ensuring no duplicates and tracking call history.
 
-- java 8 or higher
-- swing support (included in standard jdk)
+## troubleshooting
+
+**compilation errors?**
+- ensure you're in the project root directory
+- check that jdk is properly installed
+- verify all `.java` files are in the `src/` folder
+
+**game won't launch?**
+- make sure you compiled first with `javac src/*.java`
+- check classpath: use `-cp src` when running
+- verify java version is 8 or higher
+
+## license
+
+this project is open source and available under the [MIT License](LICENSE).
+
 
