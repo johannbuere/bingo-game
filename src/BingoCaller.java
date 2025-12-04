@@ -22,16 +22,12 @@ public class BingoCaller {
         currentCallIndex = -1;
     }
 
-
     public String getNextCall() {
         if (currentCallIndex < maxCalls - 1 && currentCallIndex < calls.size() - 1) {
-            currentCallIndex++;
-            String nextCall = calls.get(currentCallIndex);
-            return nextCall;
+            return calls.get(++currentCallIndex);
         }
         return null;
     }
-
 
     public boolean hasCallsLeft() {
         return currentCallIndex < maxCalls - 1;

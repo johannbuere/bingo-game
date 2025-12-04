@@ -70,9 +70,6 @@ public class BingoCard {
         }
     }
 
-
-
-
     public boolean hasWon() {
         // Check rows
         for (int row = 0; row < 5; row++) {
